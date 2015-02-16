@@ -3,9 +3,15 @@
 
 #include <QMainWindow>
 
+#include <QSystemTrayIcon>
+
+
+
 namespace Ui {
 class MainWindow;
 }
+
+
 
 class MainWindow : public QMainWindow
 {
@@ -17,6 +23,11 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+public slots:
+    void trayIconClicked(QSystemTrayIcon::ActivationReason reason);
+    void trayIconShowClicked();
+    void trayIconExitClicked();
 };
 
 #endif // MAINWINDOW_H
