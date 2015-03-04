@@ -20,7 +20,9 @@ public:
 
 namespace global
 {
+
 extern TrayIcon trayIcon;
+
 }
 
 #endif // TRAYICON_H

@@ -3,9 +3,10 @@
 
 
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
+    , mAllowClose(false)
 {
     ui->setupUi(this);
 }
@@ -13,6 +14,22 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if (!mAllowClose)
+    {
+        event->ignore();
+        hide();
+    }
+}
+
+void MainWindow::closeWindow()
+{
+    mAllowClose = true;
+
+    close();
 }
 
 void MainWindow::trayIconClicked(QSystemTrayIcon::ActivationReason reason)
@@ -48,5 +65,15 @@ void MainWindow::trayIconShowClicked()
 
 void MainWindow::trayIconExitClicked()
 {
-    QApplication::closeAllWindows();
+    closeWindow();
+}
+
+void MainWindow::on_actionExit_triggered()
+{
+    closeWindow();
+}
+
+void MainWindow::on_actionAbout_triggered()
+{
+
 }

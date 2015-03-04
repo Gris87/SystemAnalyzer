@@ -4,6 +4,15 @@
 
 
 
+namespace global
+{
+
+TrayIcon trayIcon;
+
+}
+
+// =================================================================
+
 TrayIcon::TrayIcon(QObject *parent)
     : QSystemTrayIcon(parent)
 {
@@ -28,11 +37,4 @@ void TrayIcon::init(MainWindow *mainWindow)
     setToolTip(tr("System Analyzer"));
 
     QObject::connect(this, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), mainWindow, SLOT(trayIconClicked(QSystemTrayIcon::ActivationReason)));
-}
-
-// =================================================================
-
-namespace global
-{
-TrayIcon trayIcon;
 }
