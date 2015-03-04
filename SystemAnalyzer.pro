@@ -15,11 +15,14 @@ RC_FILE    = Resources.rc
 RESOURCES += Resources.qrc
 
 SOURCES += \
+            src/main/aboutdialog.cpp \
             src/main/mainwindow.cpp \
             src/main/trayicon.cpp \
-            src/main.cpp \
+            src/main.cpp
 
-HEADERS  += src/main/mainwindow.h \
+HEADERS  += src/main/aboutdialog.h \
+            src/main/mainwindow.h \
             src/main/trayicon.h
 
-FORMS    += src/main/mainwindow.ui
+FORMS    += src/main/aboutdialog.ui \
+            src/main/mainwindow.ui

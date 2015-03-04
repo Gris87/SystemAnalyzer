@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "aboutdialog.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -61,6 +62,8 @@ void MainWindow::trayIconClicked(QSystemTrayIcon::ActivationReason reason)
 void MainWindow::trayIconShowClicked()
 {
     show();
+    raise();
+    activateWindow();
 }
 
 void MainWindow::trayIconExitClicked()
@@ -75,5 +78,6 @@ void MainWindow::on_actionExit_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
-
+    AboutDialog dialog(this);
+    dialog.exec();
 }
