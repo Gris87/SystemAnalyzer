@@ -16,13 +16,18 @@ RESOURCES += Resources.qrc
 
 SOURCES += \
             src/main/aboutdialog.cpp \
+            src/main/editrulesdialog.cpp \
             src/main/mainwindow.cpp \
+            src/main/rules.cpp \
             src/main/trayicon.cpp \
             src/main.cpp
 
 HEADERS  += src/main/aboutdialog.h \
+            src/main/editrulesdialog.h \
             src/main/mainwindow.h \
+            src/main/rules.h \
             src/main/trayicon.h
 
 FORMS    += src/main/aboutdialog.ui \
+            src/main/editrulesdialog.ui \
             src/main/mainwindow.ui

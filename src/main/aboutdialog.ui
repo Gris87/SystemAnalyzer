@@ -135,7 +135,7 @@
         </font>
        </property>
        <property name="text">
-        <string>This label will help you to avoid viruses</string>
+        <string>This application will help you to avoid viruses</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>

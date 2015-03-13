@@ -6,6 +6,8 @@
 #include <QSystemTrayIcon>
 #include <QCloseEvent>
 
+#include "rules.h"
+
 
 
 namespace Ui {
@@ -29,7 +31,9 @@ private:
     void closeWindow();
 
     Ui::MainWindow *ui;
+
     bool            mAllowClose;
+    QList<Rules *>  mRulesList;
 
 public slots:
     void trayIconClicked(QSystemTrayIcon::ActivationReason reason);
@@ -39,6 +43,10 @@ public slots:
 private slots:
     void on_actionExit_triggered();
     void on_actionAbout_triggered();
+    void on_actionAdd_triggered();
+    void on_actionEdit_triggered();
+    void on_actionRemove_triggered();
+    void on_actionStart_triggered();
 };
 
 #endif // MAINWINDOW_H

@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 
 #include "aboutdialog.h"
+#include "editrulesdialog.h"
+
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -14,6 +16,11 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    for (int i = 0; i < mRulesList.length(); ++i)
+    {
+        delete mRulesList.at(i);
+    }
+
     delete ui;
 }
 
@@ -80,4 +87,35 @@ void MainWindow::on_actionAbout_triggered()
 {
     AboutDialog dialog(this);
     dialog.exec();
+}
+
+void MainWindow::on_actionAdd_triggered()
+{
+    Rules *newRules = new Rules();
+
+    EditRulesDialog dialog(newRules, this);
+
+    if (dialog.exec())
+    {
+        mRulesList.append(newRules);
+    }
+    else
+    {
+        delete newRules;
+    }
+}
+
+void MainWindow::on_actionEdit_triggered()
+{
+    // TODO: Implement MainWindow::on_actionEdit_triggered
+}
+
+void MainWindow::on_actionRemove_triggered()
+{
+    // TODO: Implement MainWindow::on_actionRemove_triggered
+}
+
+void MainWindow::on_actionStart_triggered()
+{
+    // TODO: Implement MainWindow::on_actionStart_triggered
 }
