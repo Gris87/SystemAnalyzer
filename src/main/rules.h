@@ -31,6 +31,8 @@ public:
     Rules();
     ~Rules();
 
+    void reset();
+
     const QString toString() const;
 
     SchedulerType getType() const;

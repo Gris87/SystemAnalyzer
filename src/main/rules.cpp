@@ -5,16 +5,23 @@
 Rules::Rules()
     : mType(SCHEDULER_TYPE_EACH_MINUTES)
     , mEachMinutes(1)
-    , mDays(0xFF)
+    , mDays(0x7F) // all days (01111111)
     , mCheckAutorun(true)
     , mCheckSystemFiles(true)
 {
-
 }
 
 Rules::~Rules()
 {
+}
 
+void Rules::reset()
+{
+    mType             = SCHEDULER_TYPE_EACH_MINUTES;
+    mEachMinutes      = 1;
+    mDays             = 0x7F; // all days (01111111)
+    mCheckAutorun     = true;
+    mCheckSystemFiles = true;
 }
 
 const QString Rules::toString() const

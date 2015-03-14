@@ -140,6 +140,8 @@ void EditRulesDialog::on_okButton_clicked()
 
 void EditRulesDialog::on_applyButton_clicked()
 {
+    mRules->reset();
+
     if (ui->manuallyRadioButton->isChecked())
     {
         mRules->setType(Rules::SCHEDULER_TYPE_MANUALLY);
@@ -166,11 +168,13 @@ void EditRulesDialog::on_applyButton_clicked()
     }
     else
     {
-        mRules->setType(Rules::SCHEDULER_TYPE_MANUALLY);
+        qFatal("Unknown scheduler type");
     }
 
     mRules->setCheckAutorun(    ui->checkAutorunCheckBox->isChecked());
     mRules->setCheckSystemFiles(ui->checkSystemFilesCheckBox->isChecked());
+
+    ui->applyButton->setEnabled(false);
 }
 
 void EditRulesDialog::on_cancelButton_clicked()
