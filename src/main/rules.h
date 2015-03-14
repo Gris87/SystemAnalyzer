@@ -50,9 +50,6 @@ public:
     bool isWednesdayEnabled() const;
     void setWednesdayEnabled(bool value);
 
-    bool isWednesdayEnabled() const;
-    void setWednesdayEnabled(bool value);
-
     bool isThursdayEnabled() const;
     void setThursdayEnabled(bool value);
 

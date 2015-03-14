@@ -3,12 +3,15 @@
 
 
 
-EditRulesDialog::EditRulesDialog(Rules *rules, QWidget *parent)
+EditRulesDialog::EditRulesDialog(Rules *rules, bool withApplyButton, QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::EditRulesDialog)
     , mRules(rules)
+    , mWasApplied(false)
 {
     ui->setupUi(this);
+
+    ui->applyButton->setVisible(withApplyButton);
 
     setupUiFromRules();
 }
@@ -66,7 +69,7 @@ void EditRulesDialog::on_manuallyRadioButton_toggled(bool /*checked*/)
     ui->applyButton->setEnabled(true);
 }
 
-void EditRulesDialog::on_eachMinutesRadioButton_toggled(bool /*checked*/)
+void EditRulesDialog::on_eachMinutesRadioButton_toggled(bool checked)
 {
     ui->minutesSpinBox->setEnabled(checked);
     ui->applyButton->setEnabled(true);
@@ -77,13 +80,13 @@ void EditRulesDialog::on_minutesSpinBox_valueChanged(int /*value*/)
     ui->applyButton->setEnabled(true);
 }
 
-void EditRulesDialog::on_daysRadioButton_toggled(bool /*checked*/)
+void EditRulesDialog::on_daysRadioButton_toggled(bool checked)
 {
     ui->daysWidget->setEnabled(checked);
     ui->applyButton->setEnabled(true);
 }
 
-void EditRulesDialog::on_mondayCeckBox_toggled(bool /*checked*/)
+void EditRulesDialog::on_mondayCheckBox_toggled(bool /*checked*/)
 {
     ui->applyButton->setEnabled(true);
 }
@@ -140,6 +143,8 @@ void EditRulesDialog::on_okButton_clicked()
 
 void EditRulesDialog::on_applyButton_clicked()
 {
+    mWasApplied = true;
+
     mRules->reset();
 
     if (ui->manuallyRadioButton->isChecked())
@@ -179,5 +184,12 @@ void EditRulesDialog::on_applyButton_clicked()
 
 void EditRulesDialog::on_cancelButton_clicked()
 {
-    reject();
+    if (mWasApplied)
+    {
+        accept();
+    }
+    else
+    {
+        reject();
+    }
 }

@@ -93,7 +93,7 @@ void MainWindow::on_actionAdd_triggered()
 {
     Rules *newRules = new Rules();
 
-    EditRulesDialog dialog(newRules, this);
+    EditRulesDialog dialog(newRules, false, this);
 
     if (dialog.exec())
     {

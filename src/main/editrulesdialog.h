@@ -16,7 +16,7 @@ class EditRulesDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit EditRulesDialog(Rules *rules, QWidget *parent = 0);
+    explicit EditRulesDialog(Rules *rules, bool withApplyButton, QWidget *parent = 0);
     ~EditRulesDialog();
 
 private:
@@ -25,13 +25,14 @@ private:
     Ui::EditRulesDialog *ui;
 
     Rules               *mRules;
+    bool                 mWasApplied;
 
 private slots:
     void on_manuallyRadioButton_toggled(bool checked);
     void on_eachMinutesRadioButton_toggled(bool checked);
     void on_minutesSpinBox_valueChanged(int value);
     void on_daysRadioButton_toggled(bool checked);
-    void on_mondayCeckBox_toggled(bool checked);
+    void on_mondayCheckBox_toggled(bool checked);
     void on_tuesdayCheckBox_toggled(bool checked);
     void on_wednesdayCheckBox_toggled(bool checked);
     void on_thursdayCheckBox_toggled(bool checked);
