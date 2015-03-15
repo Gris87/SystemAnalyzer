@@ -29,6 +29,8 @@ protected:
 
 private:
     void closeWindow();
+    void updateRulesRow(int row);
+    void addRulesRow();
 
     Ui::MainWindow *ui;
 
@@ -47,6 +49,7 @@ private slots:
     void on_actionEdit_triggered();
     void on_actionRemove_triggered();
     void on_actionStart_triggered();
+    void on_rulesTableWidget_cellChanged(int row, int column);
 };
 
 #endif // MAINWINDOW_H

@@ -3,7 +3,7 @@
 
 
 Rules::Rules()
-    : mType(SCHEDULER_TYPE_EACH_MINUTES)
+    : mType(SCHEDULE_TYPE_EACH_MINUTES)
     , mEachMinutes(1)
     , mDays(0x7F) // all days (01111111)
     , mCheckAutorun(true)
@@ -17,7 +17,7 @@ Rules::~Rules()
 
 void Rules::reset()
 {
-    mType             = SCHEDULER_TYPE_EACH_MINUTES;
+    mType             = SCHEDULE_TYPE_EACH_MINUTES;
     mEachMinutes      = 1;
     mDays             = 0x7F; // all days (01111111)
     mCheckAutorun     = true;
@@ -28,13 +28,13 @@ const QString Rules::toString() const
 {
     switch (mType)
     {
-        case SCHEDULER_TYPE_MANUALLY:       return tr("Manually");
-        case SCHEDULER_TYPE_EACH_MINUTES:   return tr("Each %1 minute(s)").arg(mEachMinutes);
-        case SCHEDULER_TYPE_DAYS:
+        case SCHEDULE_TYPE_MANUALLY:       return tr("Manually");
+        case SCHEDULE_TYPE_EACH_MINUTES:   return tr("Each %1 minute(s)").arg(mEachMinutes);
+        case SCHEDULE_TYPE_DAYS:
         {
             QString res;
 
-            if (mDays & SCHEDULER_DAYS_MONDAY)
+            if (mDays & SCHEDULE_DAYS_MONDAY)
             {
                 if (res != "")
                 {
@@ -44,7 +44,7 @@ const QString Rules::toString() const
                 res.append(tr("Mon"));
             }
 
-            if (mDays & SCHEDULER_DAYS_TUESDAY)
+            if (mDays & SCHEDULE_DAYS_TUESDAY)
             {
                 if (res != "")
                 {
@@ -54,7 +54,7 @@ const QString Rules::toString() const
                 res.append(tr("Tue"));
             }
 
-            if (mDays & SCHEDULER_DAYS_WEDNESDAY)
+            if (mDays & SCHEDULE_DAYS_WEDNESDAY)
             {
                 if (res != "")
                 {
@@ -64,7 +64,7 @@ const QString Rules::toString() const
                 res.append(tr("Wed"));
             }
 
-            if (mDays & SCHEDULER_DAYS_THURSDAY)
+            if (mDays & SCHEDULE_DAYS_THURSDAY)
             {
                 if (res != "")
                 {
@@ -74,7 +74,7 @@ const QString Rules::toString() const
                 res.append(tr("Thu"));
             }
 
-            if (mDays & SCHEDULER_DAYS_FRIDAY)
+            if (mDays & SCHEDULE_DAYS_FRIDAY)
             {
                 if (res != "")
                 {
@@ -84,7 +84,7 @@ const QString Rules::toString() const
                 res.append(tr("Fri"));
             }
 
-            if (mDays & SCHEDULER_DAYS_SATURDAY)
+            if (mDays & SCHEDULE_DAYS_SATURDAY)
             {
                 if (res != "")
                 {
@@ -94,7 +94,7 @@ const QString Rules::toString() const
                 res.append(tr("Sat"));
             }
 
-            if (mDays & SCHEDULER_DAYS_SUNDAY)
+            if (mDays & SCHEDULE_DAYS_SUNDAY)
             {
                 if (res != "")
                 {
@@ -107,16 +107,16 @@ const QString Rules::toString() const
             return res;
         }
 
-        default: return "UNKNOWN SCHEDULER TYPE";
+        default: return "UNKNOWN SCHEDULE TYPE";
     }
 }
 
-Rules::SchedulerType Rules::getType() const
+Rules::ScheduleType Rules::getType() const
 {
     return mType;
 }
 
-void Rules::setType(Rules::SchedulerType value)
+void Rules::setType(Rules::ScheduleType value)
 {
     mType = value;
 }
@@ -138,120 +138,120 @@ void Rules::setEachMinutes(quint16 value)
 
 bool Rules::isMondayEnabled() const
 {
-    return mDays & SCHEDULER_DAYS_MONDAY;
+    return mDays & SCHEDULE_DAYS_MONDAY;
 }
 
 void Rules::setMondayEnabled(bool value)
 {
     if (value)
     {
-        mDays |= SCHEDULER_DAYS_MONDAY;
+        mDays |= SCHEDULE_DAYS_MONDAY;
     }
     else
     {
-        mDays &= ~SCHEDULER_DAYS_MONDAY;
+        mDays &= ~SCHEDULE_DAYS_MONDAY;
     }
 }
 
 bool Rules::isTuesdayEnabled() const
 {
-    return mDays & SCHEDULER_DAYS_TUESDAY;
+    return mDays & SCHEDULE_DAYS_TUESDAY;
 }
 
 void Rules::setTuesdayEnabled(bool value)
 {
     if (value)
     {
-        mDays |= SCHEDULER_DAYS_TUESDAY;
+        mDays |= SCHEDULE_DAYS_TUESDAY;
     }
     else
     {
-        mDays &= ~SCHEDULER_DAYS_TUESDAY;
+        mDays &= ~SCHEDULE_DAYS_TUESDAY;
     }
 }
 
 bool Rules::isWednesdayEnabled() const
 {
-    return mDays & SCHEDULER_DAYS_WEDNESDAY;
+    return mDays & SCHEDULE_DAYS_WEDNESDAY;
 }
 
 void Rules::setWednesdayEnabled(bool value)
 {
     if (value)
     {
-        mDays |= SCHEDULER_DAYS_WEDNESDAY;
+        mDays |= SCHEDULE_DAYS_WEDNESDAY;
     }
     else
     {
-        mDays &= ~SCHEDULER_DAYS_WEDNESDAY;
+        mDays &= ~SCHEDULE_DAYS_WEDNESDAY;
     }
 }
 
 bool Rules::isThursdayEnabled() const
 {
-    return mDays & SCHEDULER_DAYS_THURSDAY;
+    return mDays & SCHEDULE_DAYS_THURSDAY;
 }
 
 void Rules::setThursdayEnabled(bool value)
 {
     if (value)
     {
-        mDays |= SCHEDULER_DAYS_THURSDAY;
+        mDays |= SCHEDULE_DAYS_THURSDAY;
     }
     else
     {
-        mDays &= ~SCHEDULER_DAYS_THURSDAY;
+        mDays &= ~SCHEDULE_DAYS_THURSDAY;
     }
 }
 
 bool Rules::isFridayEnabled() const
 {
-    return mDays & SCHEDULER_DAYS_FRIDAY;
+    return mDays & SCHEDULE_DAYS_FRIDAY;
 }
 
 void Rules::setFridayEnabled(bool value)
 {
     if (value)
     {
-        mDays |= SCHEDULER_DAYS_FRIDAY;
+        mDays |= SCHEDULE_DAYS_FRIDAY;
     }
     else
     {
-        mDays &= ~SCHEDULER_DAYS_FRIDAY;
+        mDays &= ~SCHEDULE_DAYS_FRIDAY;
     }
 }
 
 bool Rules::isSaturdayEnabled() const
 {
-    return mDays & SCHEDULER_DAYS_SATURDAY;
+    return mDays & SCHEDULE_DAYS_SATURDAY;
 }
 
 void Rules::setSaturdayEnabled(bool value)
 {
     if (value)
     {
-        mDays |= SCHEDULER_DAYS_SATURDAY;
+        mDays |= SCHEDULE_DAYS_SATURDAY;
     }
     else
     {
-        mDays &= ~SCHEDULER_DAYS_SATURDAY;
+        mDays &= ~SCHEDULE_DAYS_SATURDAY;
     }
 }
 
 bool Rules::isSundayEnabled() const
 {
-    return mDays & SCHEDULER_DAYS_SUNDAY;
+    return mDays & SCHEDULE_DAYS_SUNDAY;
 }
 
 void Rules::setSundayEnabled(bool value)
 {
     if (value)
     {
-        mDays |= SCHEDULER_DAYS_SUNDAY;
+        mDays |= SCHEDULE_DAYS_SUNDAY;
     }
     else
     {
-        mDays &= ~SCHEDULER_DAYS_SUNDAY;
+        mDays &= ~SCHEDULE_DAYS_SUNDAY;
     }
 }
 

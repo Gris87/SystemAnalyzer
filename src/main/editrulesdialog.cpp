@@ -25,13 +25,13 @@ void EditRulesDialog::setupUiFromRules()
 {
     switch (mRules->getType())
     {
-        case Rules::SCHEDULER_TYPE_MANUALLY:
+        case Rules::SCHEDULE_TYPE_MANUALLY:
         {
             ui->manuallyRadioButton->setChecked(true);
         }
         break;
 
-        case Rules::SCHEDULER_TYPE_EACH_MINUTES:
+        case Rules::SCHEDULE_TYPE_EACH_MINUTES:
         {
             ui->eachMinutesRadioButton->setChecked(true);
 
@@ -39,7 +39,7 @@ void EditRulesDialog::setupUiFromRules()
         }
         break;
 
-        case Rules::SCHEDULER_TYPE_DAYS:
+        case Rules::SCHEDULE_TYPE_DAYS:
         {
             ui->daysRadioButton->setChecked(true);
 
@@ -54,7 +54,7 @@ void EditRulesDialog::setupUiFromRules()
         break;
 
         default:
-            qFatal("Unknown scheduler type");
+            qFatal("Unknown schedule type");
         break;
     }
 
@@ -149,19 +149,19 @@ void EditRulesDialog::on_applyButton_clicked()
 
     if (ui->manuallyRadioButton->isChecked())
     {
-        mRules->setType(Rules::SCHEDULER_TYPE_MANUALLY);
+        mRules->setType(Rules::SCHEDULE_TYPE_MANUALLY);
     }
     else
     if (ui->eachMinutesRadioButton->isChecked())
     {
-        mRules->setType(Rules::SCHEDULER_TYPE_EACH_MINUTES);
+        mRules->setType(Rules::SCHEDULE_TYPE_EACH_MINUTES);
 
         mRules->setEachMinutes(ui->minutesSpinBox->value());
     }
     else
     if (ui->daysRadioButton->isChecked())
     {
-        mRules->setType(Rules::SCHEDULER_TYPE_DAYS);
+        mRules->setType(Rules::SCHEDULE_TYPE_DAYS);
 
         mRules->setMondayEnabled(   ui->mondayCheckBox->isChecked());
         mRules->setTuesdayEnabled(  ui->tuesdayCheckBox->isChecked());
@@ -173,7 +173,7 @@ void EditRulesDialog::on_applyButton_clicked()
     }
     else
     {
-        qFatal("Unknown scheduler type");
+        qFatal("Unknown schedule type");
     }
 
     mRules->setCheckAutorun(    ui->checkAutorunCheckBox->isChecked());

@@ -10,22 +10,22 @@ class Rules : QObject
     Q_OBJECT
 
 public:
-    enum SchedulerType
+    enum ScheduleType
     {
-          SCHEDULER_TYPE_MANUALLY
-        , SCHEDULER_TYPE_EACH_MINUTES
-        , SCHEDULER_TYPE_DAYS
+          SCHEDULE_TYPE_MANUALLY
+        , SCHEDULE_TYPE_EACH_MINUTES
+        , SCHEDULE_TYPE_DAYS
     };
 
-    enum SchedulerDays
+    enum ScheduleDays
     {
-          SCHEDULER_DAYS_MONDAY    = 0x01
-        , SCHEDULER_DAYS_TUESDAY   = 0x02
-        , SCHEDULER_DAYS_WEDNESDAY = 0x04
-        , SCHEDULER_DAYS_THURSDAY  = 0x08
-        , SCHEDULER_DAYS_FRIDAY    = 0x10
-        , SCHEDULER_DAYS_SATURDAY  = 0x20
-        , SCHEDULER_DAYS_SUNDAY    = 0x40
+          SCHEDULE_DAYS_MONDAY    = 0x01
+        , SCHEDULE_DAYS_TUESDAY   = 0x02
+        , SCHEDULE_DAYS_WEDNESDAY = 0x04
+        , SCHEDULE_DAYS_THURSDAY  = 0x08
+        , SCHEDULE_DAYS_FRIDAY    = 0x10
+        , SCHEDULE_DAYS_SATURDAY  = 0x20
+        , SCHEDULE_DAYS_SUNDAY    = 0x40
     };
 
     Rules();
@@ -35,8 +35,8 @@ public:
 
     const QString toString() const;
 
-    SchedulerType getType() const;
-    void          setType(SchedulerType value);
+    ScheduleType getType() const;
+    void         setType(ScheduleType value);
 
     quint16 getEachMinutes() const;
     void    setEachMinutes(quint16 value);
@@ -69,11 +69,11 @@ public:
     void setCheckSystemFiles(bool value);
 
 private:
-    SchedulerType mType;
-    quint16       mEachMinutes;
-    quint8        mDays;
-    bool          mCheckAutorun;
-    bool          mCheckSystemFiles;
+    ScheduleType mType;
+    quint16      mEachMinutes;
+    quint8       mDays;
+    bool         mCheckAutorun;
+    bool         mCheckSystemFiles;
 };
 
 #endif // RULES_H

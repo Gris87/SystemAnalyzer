@@ -34,9 +34,9 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="schedulerTab">
+     <widget class="QWidget" name="scheduleTab">
       <attribute name="title">
-       <string>Scheduler</string>
+       <string>Schedule</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <property name="spacing">
@@ -292,6 +292,9 @@
        <property name="text">
         <string>OK</string>
        </property>
+       <property name="default">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
      <item>
@@ -356,6 +359,7 @@
  </widget>
  <tabstops>
   <tabstop>mainTabWidget</tabstop>
+  <tabstop>manuallyRadioButton</tabstop>
   <tabstop>eachMinutesRadioButton</tabstop>
   <tabstop>minutesSpinBox</tabstop>
   <tabstop>daysRadioButton</tabstop>
@@ -366,7 +370,10 @@
   <tabstop>fridayCheckBox</tabstop>
   <tabstop>saturdayCheckBox</tabstop>
   <tabstop>sundayCheckBox</tabstop>
+  <tabstop>checkAutorunCheckBox</tabstop>
+  <tabstop>checkSystemFilesCheckBox</tabstop>
   <tabstop>okButton</tabstop>
+  <tabstop>applyButton</tabstop>
   <tabstop>cancelButton</tabstop>
  </tabstops>
  <resources/>
