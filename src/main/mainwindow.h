@@ -49,7 +49,8 @@ private slots:
     void on_actionEdit_triggered();
     void on_actionRemove_triggered();
     void on_actionStart_triggered();
-    void on_rulesTableWidget_cellChanged(int row, int column);
+    void on_rulesTableWidget_currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn);
+    void on_rulesTableWidget_cellDoubleClicked(int row, int column);    
 };
 
 #endif // MAINWINDOW_H

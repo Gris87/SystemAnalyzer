@@ -1,25 +1,115 @@
 #include "rules.h"
 
+#include <QDate>
 
 
-Rules::Rules()
-    : mType(SCHEDULE_TYPE_EACH_MINUTES)
+
+Rules::Rules(QObject *parent)
+    : QObject(parent)
+    , mType(SCHEDULE_TYPE_EACH_MINUTES)
     , mEachMinutes(1)
-    , mDays(0x7F) // all days (01111111)
+    , mDays(SCHEDULE_DAYS_ALL)
     , mCheckAutorun(true)
     , mCheckSystemFiles(true)
+    , mProgressBar(0)
+    , mExecutorThread(0)
+    , mNeedRestart(false)
 {
 }
 
 Rules::~Rules()
 {
+    if (isRunning())
+    {
+        stop();
+    }
+}
+
+void Rules::start()
+{
+    Q_ASSERT(mExecutorThread == 0);
+
+    mNeedRestart = false;
+
+    mExecutorThread = new ExecutorThread(this, this);
+
+    connect(mExecutorThread, SIGNAL(progressChanged(int)), this, SLOT(progressChanged(int)), Qt::BlockingQueuedConnection);
+    connect(mExecutorThread, SIGNAL(finished()),           this, SLOT(executorThreadFinished()));
+
+    mExecutorThread->start(QThread::LowestPriority);
+}
+
+void Rules::stop()
+{
+    Q_ASSERT(mExecutorThread);
+
+    // TODO: Stop timer
+
+    mNeedRestart = false;
+
+    disconnect(mExecutorThread, SIGNAL(progressChanged(int)), this, SLOT(progressChanged(int)));
+    disconnect(mExecutorThread, SIGNAL(finished()),           this, SLOT(executorThreadFinished()));
+
+    mExecutorThread->stop();
+    mExecutorThread->wait();
+
+    executorThreadFinished();
+}
+
+void Rules::checkIfNeedStart()
+{
+    switch (mType)
+    {
+        case SCHEDULE_TYPE_MANUALLY:
+        {
+            // Nothing
+        }
+        break;
+
+        case SCHEDULE_TYPE_EACH_MINUTES:
+        {
+            // TODO: Need to get time of next start and initiate timer
+            if (isRunning())
+            {
+                mNeedRestart = true;
+            }
+            else
+            {
+                start();
+            }
+        }
+        break;
+
+        case SCHEDULE_TYPE_DAYS:
+        {
+            // TODO: Need to get time of next start and initiate timer
+            if (mDays & (1 << (QDate::currentDate().dayOfWeek() - 1)))
+            {
+                if (isRunning())
+                {
+                    mNeedRestart = true;
+                }
+                else
+                {
+                    start();
+                }
+            }
+        }
+        break;
+
+        default:
+        {
+            qFatal("Unknown schedule type");
+        }
+        break;
+    }
 }
 
 void Rules::reset()
 {
     mType             = SCHEDULE_TYPE_EACH_MINUTES;
     mEachMinutes      = 1;
-    mDays             = 0x7F; // all days (01111111)
+    mDays             = SCHEDULE_DAYS_ALL;
     mCheckAutorun     = true;
     mCheckSystemFiles = true;
 }
@@ -104,6 +194,11 @@ const QString Rules::toString() const
                 res.append(tr("Sun"));
             }
 
+            if (res == "")
+            {
+                res = tr("Manually");
+            }
+
             return res;
         }
 
@@ -124,6 +219,11 @@ void Rules::setType(Rules::ScheduleType value)
 quint16 Rules::getEachMinutes() const
 {
     return mEachMinutes;
+}
+
+quint8 Rules::getDaysMask() const
+{
+    return mDays;
 }
 
 void Rules::setEachMinutes(quint16 value)
@@ -273,4 +373,34 @@ bool Rules::isCheckSystemFiles() const
 void Rules::setCheckSystemFiles(bool value)
 {
     mCheckSystemFiles = value;
+}
+
+void Rules::setProgressBar(QProgressBar *progressBar)
+{
+    mProgressBar = progressBar;
+}
+
+bool Rules::isRunning() const
+{
+    return mExecutorThread != 0;
+}
+
+void Rules::progressChanged(int progress)
+{
+    Q_ASSERT(mProgressBar);
+
+    mProgressBar->setValue(progress);
+}
+
+void Rules::executorThreadFinished()
+{
+    mProgressBar->setValue(0);
+
+    delete mExecutorThread;
+    mExecutorThread = 0;    
+
+    if (mNeedRestart)
+    {
+        start();
+    }
 }

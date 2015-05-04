@@ -6,6 +6,7 @@
 
 #include "aboutdialog.h"
 #include "editrulesdialog.h"
+#include "trayicon.h"
 
 
 
@@ -20,6 +21,11 @@ MainWindow::MainWindow(QWidget *parent)
     , mAllowClose(false)
 {
     ui->setupUi(this);
+
+    if (!TrayIcon::isSystemTrayAvailable())
+    {
+        mAllowClose = true;
+    }
 }
 
 MainWindow::~MainWindow()
@@ -56,11 +62,14 @@ void MainWindow::updateRulesRow(int row)
 void MainWindow::addRulesRow()
 {
     QProgressBar *progressBar = new QProgressBar(this);
+    progressBar->setMaximum(100);
     progressBar->setTextVisible(false);
 
     // ------------------------------------------------
 
     int lastRow = ui->rulesTableWidget->rowCount();
+
+    mRulesList.at(lastRow)->setProgressBar(progressBar);
 
     ui->rulesTableWidget->setRowCount(lastRow + 1);
     ui->rulesTableWidget->setItem(      lastRow, RULES_TABLE_COLUMN_SCHEDULE, new QTableWidgetItem());
@@ -120,7 +129,7 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_actionAdd_triggered()
 {
-    Rules *newRules = new Rules();
+    Rules *newRules = new Rules(this);
 
     EditRulesDialog dialog(newRules, false, this);
 
@@ -128,7 +137,10 @@ void MainWindow::on_actionAdd_triggered()
     {
         mRulesList.append(newRules);
         addRulesRow();
-        ui->actionStart->setEnabled(true);
+
+        newRules->checkIfNeedStart();
+
+        ui->rulesTableWidget->setCurrentCell(mRulesList.length() - 1, 0);
     }
     else
     {
@@ -145,6 +157,8 @@ void MainWindow::on_actionEdit_triggered()
     if (dialog.exec())
     {
         updateRulesRow(row);
+
+        mRulesList.at(row)->checkIfNeedStart();
     }
 }
 
@@ -167,14 +181,20 @@ void MainWindow::on_actionRemove_triggered()
         }
 
         QList<int> rowsList = rowsSet.toList();
-        qSort(rowsList);
 
-        for (int i = rowsList.length() - 1; i >= 0; --i)
+        if (rowsList.length() > 0)
         {
-            delete mRulesList.at(rowsList.at(i));
-            mRulesList.removeAt(rowsList.at(i));
+            qSort(rowsList);
 
-            ui->rulesTableWidget->removeRow(rowsList.at(i));
+            for (int i = rowsList.length() - 1; i >= 0; --i)
+            {
+                delete mRulesList.at(rowsList.at(i));
+                mRulesList.removeAt(rowsList.at(i));
+
+                ui->rulesTableWidget->removeRow(rowsList.at(i));
+            }
+
+            ui->rulesTableWidget->setCurrentCell(rowsList.first() < ui->rulesTableWidget->rowCount() ? rowsList.first() : ui->rulesTableWidget->rowCount() - 1, 0);
         }
     }
 }
@@ -184,16 +204,23 @@ void MainWindow::on_actionStart_triggered()
     // TODO: Implement MainWindow::on_actionStart_triggered
 }
 
-void MainWindow::on_rulesTableWidget_cellChanged(int row, int /*column*/)
+void MainWindow::on_rulesTableWidget_currentCellChanged(int currentRow, int /*currentColumn*/, int /*previousRow*/, int /*previousColumn*/)
 {
-    if (row >= 0)
+    if (currentRow >= 0)
     {
         ui->actionEdit->setEnabled(  true);
         ui->actionRemove->setEnabled(true);
+        ui->actionStart->setEnabled( true);
     }
     else
     {
         ui->actionEdit->setEnabled(  false);
         ui->actionRemove->setEnabled(false);
+        ui->actionStart->setEnabled( false);
     }
+}
+
+void MainWindow::on_rulesTableWidget_cellDoubleClicked(int /*row*/, int /*column*/)
+{
+    on_actionEdit_triggered();
 }

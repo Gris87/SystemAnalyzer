@@ -3,6 +3,10 @@
 
 #include <QObject>
 
+#include <QProgressBar>
+
+#include "executorthread.h"
+
 
 
 class Rules : QObject
@@ -26,11 +30,18 @@ public:
         , SCHEDULE_DAYS_FRIDAY    = 0x10
         , SCHEDULE_DAYS_SATURDAY  = 0x20
         , SCHEDULE_DAYS_SUNDAY    = 0x40
+        , SCHEDULE_DAYS_ALL       = SCHEDULE_DAYS_MONDAY   | SCHEDULE_DAYS_TUESDAY | SCHEDULE_DAYS_WEDNESDAY |
+                                    SCHEDULE_DAYS_THURSDAY | SCHEDULE_DAYS_FRIDAY  | SCHEDULE_DAYS_SATURDAY  |
+                                    SCHEDULE_DAYS_SUNDAY
+        , SCHEDULE_DAYS_MASK      = SCHEDULE_DAYS_ALL
     };
 
-    Rules();
+    Rules(QObject *parent = 0);
     ~Rules();
 
+    void start();
+    void stop();
+    void checkIfNeedStart();
     void reset();
 
     const QString toString() const;
@@ -40,6 +51,8 @@ public:
 
     quint16 getEachMinutes() const;
     void    setEachMinutes(quint16 value);
+
+    quint8 getDaysMask() const;
 
     bool isMondayEnabled() const;
     void setMondayEnabled(bool value);
@@ -68,12 +81,24 @@ public:
     bool isCheckSystemFiles() const;
     void setCheckSystemFiles(bool value);
 
+    void setProgressBar(QProgressBar *progressBar);
+
+    bool isRunning() const;
+
+private slots:
+    void progressChanged(int progress);
+    void executorThreadFinished();
+
 private:
-    ScheduleType mType;
-    quint16      mEachMinutes;
-    quint8       mDays;
-    bool         mCheckAutorun;
-    bool         mCheckSystemFiles;
+    ScheduleType    mType;
+    quint16         mEachMinutes;
+    quint8          mDays;
+    bool            mCheckAutorun;
+    bool            mCheckSystemFiles;
+
+    QProgressBar   *mProgressBar;
+    ExecutorThread *mExecutorThread;
+    bool            mNeedRestart;
 };
 
 #endif // RULES_H

@@ -11,6 +11,8 @@ namespace Ui {
 class EditRulesDialog;
 }
 
+
+
 class EditRulesDialog : public QDialog
 {
     Q_OBJECT
@@ -21,6 +23,7 @@ public:
 
 private:
     void setupUiFromRules();
+    bool apply();
 
     Ui::EditRulesDialog *ui;
 

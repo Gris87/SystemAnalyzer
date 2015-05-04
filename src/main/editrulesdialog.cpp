@@ -1,6 +1,8 @@
 #include "editrulesdialog.h"
 #include "ui_editrulesdialog.h"
 
+#include <QMessageBox>
+
 
 
 EditRulesDialog::EditRulesDialog(Rules *rules, bool withApplyButton, QWidget *parent)
@@ -10,6 +12,14 @@ EditRulesDialog::EditRulesDialog(Rules *rules, bool withApplyButton, QWidget *pa
     , mWasApplied(false)
 {
     ui->setupUi(this);
+
+    setWindowFlags(
+                    Qt::Dialog
+                    | Qt::CustomizeWindowHint
+                    | Qt::WindowTitleHint
+                    | Qt::WindowSystemMenuHint
+                    | Qt::WindowCloseButtonHint
+                  );
 
     ui->applyButton->setVisible(withApplyButton);
 
@@ -61,7 +71,69 @@ void EditRulesDialog::setupUiFromRules()
     ui->checkAutorunCheckBox->setChecked(    mRules->isCheckAutorun());
     ui->checkSystemFilesCheckBox->setChecked(mRules->isCheckSystemFiles());
 
+    // TODO: Verification of paths
+
     ui->applyButton->setEnabled(false);
+}
+
+bool EditRulesDialog::apply()
+{
+    if (mRules->isRunning())
+    {
+        if (QMessageBox::question(this, tr("Terminate"), tr("Rules are running now. You have to terminate it. Do you want to continue?"), QMessageBox::Yes | QMessageBox::Default, QMessageBox::No | QMessageBox::Escape) == QMessageBox::Yes)
+        {
+            mRules->stop();
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    mWasApplied = true;
+
+    mRules->reset();
+
+    if (ui->manuallyRadioButton->isChecked())
+    {
+        mRules->setType(Rules::SCHEDULE_TYPE_MANUALLY);
+    }
+    else
+    if (ui->eachMinutesRadioButton->isChecked())
+    {
+        mRules->setType(Rules::SCHEDULE_TYPE_EACH_MINUTES);
+
+        mRules->setEachMinutes(ui->minutesSpinBox->value());
+    }
+    else
+    if (ui->daysRadioButton->isChecked())
+    {
+        mRules->setType(Rules::SCHEDULE_TYPE_DAYS);
+
+        mRules->setMondayEnabled(   ui->mondayCheckBox->isChecked());
+        mRules->setTuesdayEnabled(  ui->tuesdayCheckBox->isChecked());
+        mRules->setWednesdayEnabled(ui->wednesdayCheckBox->isChecked());
+        mRules->setThursdayEnabled( ui->thursdayCheckBox->isChecked());
+        mRules->setFridayEnabled(   ui->fridayCheckBox->isChecked());
+        mRules->setSaturdayEnabled( ui->saturdayCheckBox->isChecked());
+        mRules->setSundayEnabled(   ui->sundayCheckBox->isChecked());
+
+        if ((mRules->getDaysMask() & Rules::SCHEDULE_DAYS_MASK) == 0)
+        {
+            mRules->setType(Rules::SCHEDULE_TYPE_MANUALLY);
+        }
+    }
+    else
+    {
+        qFatal("Unknown schedule type");
+    }
+
+    mRules->setCheckAutorun(    ui->checkAutorunCheckBox->isChecked());
+    mRules->setCheckSystemFiles(ui->checkSystemFilesCheckBox->isChecked());
+
+    // TODO: Verification of paths
+
+    return true;
 }
 
 void EditRulesDialog::on_manuallyRadioButton_toggled(bool /*checked*/)
@@ -135,7 +207,10 @@ void EditRulesDialog::on_okButton_clicked()
 {
     if (ui->applyButton->isEnabled())
     {
-        on_applyButton_clicked();
+        if (!apply())
+        {
+            return;
+        }
     }
 
     accept();
@@ -143,43 +218,10 @@ void EditRulesDialog::on_okButton_clicked()
 
 void EditRulesDialog::on_applyButton_clicked()
 {
-    mWasApplied = true;
-
-    mRules->reset();
-
-    if (ui->manuallyRadioButton->isChecked())
+    if (apply())
     {
-        mRules->setType(Rules::SCHEDULE_TYPE_MANUALLY);
+        ui->applyButton->setEnabled(false);
     }
-    else
-    if (ui->eachMinutesRadioButton->isChecked())
-    {
-        mRules->setType(Rules::SCHEDULE_TYPE_EACH_MINUTES);
-
-        mRules->setEachMinutes(ui->minutesSpinBox->value());
-    }
-    else
-    if (ui->daysRadioButton->isChecked())
-    {
-        mRules->setType(Rules::SCHEDULE_TYPE_DAYS);
-
-        mRules->setMondayEnabled(   ui->mondayCheckBox->isChecked());
-        mRules->setTuesdayEnabled(  ui->tuesdayCheckBox->isChecked());
-        mRules->setWednesdayEnabled(ui->wednesdayCheckBox->isChecked());
-        mRules->setThursdayEnabled( ui->thursdayCheckBox->isChecked());
-        mRules->setFridayEnabled(   ui->fridayCheckBox->isChecked());
-        mRules->setSaturdayEnabled( ui->saturdayCheckBox->isChecked());
-        mRules->setSundayEnabled(   ui->sundayCheckBox->isChecked());
-    }
-    else
-    {
-        qFatal("Unknown schedule type");
-    }
-
-    mRules->setCheckAutorun(    ui->checkAutorunCheckBox->isChecked());
-    mRules->setCheckSystemFiles(ui->checkSystemFilesCheckBox->isChecked());
-
-    ui->applyButton->setEnabled(false);
 }
 
 void EditRulesDialog::on_cancelButton_clicked()
