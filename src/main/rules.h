@@ -4,12 +4,13 @@
 #include <QObject>
 
 #include <QProgressBar>
+#include <QTimer>
 
 #include "executorthread.h"
 
 
 
-class Rules : QObject
+class Rules : public QObject
 {
     Q_OBJECT
 
@@ -20,6 +21,39 @@ public:
         , SCHEDULE_TYPE_EACH_MINUTES
         , SCHEDULE_TYPE_DAYS
     };
+
+    static const QString toString(ScheduleType type)
+    {
+        switch (type)
+        {
+            case SCHEDULE_TYPE_MANUALLY:     return "Manually";
+            case SCHEDULE_TYPE_EACH_MINUTES: return "Each minutes";
+            case SCHEDULE_TYPE_DAYS:         return "Days";
+            default:                         return "UNKNOWN";
+        }
+    }
+
+    static ScheduleType scheduleTypeFromString(const QString &type)
+    {
+        if (type == "Manually")
+        {
+            return SCHEDULE_TYPE_MANUALLY;
+        }
+
+        if (type == "Each minutes")
+        {
+            return SCHEDULE_TYPE_EACH_MINUTES;
+        }
+
+        if (type == "Days")
+        {
+            return SCHEDULE_TYPE_DAYS;
+        }
+
+        qFatal("Unknown schedule type");
+
+        return SCHEDULE_TYPE_MANUALLY;
+    }
 
     enum ScheduleDays
     {
@@ -41,10 +75,20 @@ public:
 
     void start();
     void stop();
+    void waitForFinished();
     void checkIfNeedStart();
     void reset();
 
+    void save();
+    void load();
+    void deleteFolder();
+
+    qint64 calculateTimeOfNextStart();
+
     const QString toString() const;
+
+    const QString& getName() const;
+    void           setName(const QString &name);
 
     ScheduleType getType() const;
     void         setType(ScheduleType value);
@@ -53,6 +97,7 @@ public:
     void    setEachMinutes(quint16 value);
 
     quint8 getDaysMask() const;
+    void setDaysMask(quint8 value);
 
     bool isMondayEnabled() const;
     void setMondayEnabled(bool value);
@@ -85,11 +130,17 @@ public:
 
     bool isRunning() const;
 
+signals:
+    void started();
+    void finished();
+
 private slots:
-    void progressChanged(int progress);
+    void timeout();
+    void progressChanged(quint8 progress);
     void executorThreadFinished();
 
 private:
+    QString         mName;
     ScheduleType    mType;
     quint16         mEachMinutes;
     quint8          mDays;
@@ -99,6 +150,8 @@ private:
     QProgressBar   *mProgressBar;
     ExecutorThread *mExecutorThread;
     bool            mNeedRestart;
+    QTimer          mTimer;
+    qint64          mTimeOfNextStart;
 };
 
 #endif // RULES_H

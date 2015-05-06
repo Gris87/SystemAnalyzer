@@ -26,16 +26,23 @@ public:
 
 protected:
     void closeEvent(QCloseEvent *event);
+    bool eventFilter(QObject *object, QEvent *event);
 
 private:
     void closeWindow();
     void updateRulesRow(int row);
     void addRulesRow();
 
+    void saveWindowState();
+    void loadWindowState();
+    void loadRules();
+
     Ui::MainWindow *ui;
 
     bool            mAllowClose;
     QList<Rules *>  mRulesList;
+    QIcon           mPauseIcon;
+    QIcon           mStartIcon;
 
 public slots:
     void trayIconClicked(QSystemTrayIcon::ActivationReason reason);
@@ -43,14 +50,17 @@ public slots:
     void trayIconExitClicked();
 
 private slots:
+    void rulesStarted();
+    void rulesFinished();
+
     void on_actionExit_triggered();
     void on_actionAbout_triggered();
     void on_actionAdd_triggered();
     void on_actionEdit_triggered();
     void on_actionRemove_triggered();
     void on_actionStart_triggered();
-    void on_rulesTableWidget_currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn);
-    void on_rulesTableWidget_cellDoubleClicked(int row, int column);    
+    void on_rulesTableWidget_itemSelectionChanged();
+    void on_rulesTableWidget_cellDoubleClicked(int row, int column);
 };
 
 #endif // MAINWINDOW_H

@@ -3,7 +3,8 @@
         <file>images/Icon.png</file>
         <file>images/Add.png</file>
         <file>images/Edit.png</file>
-        <file>images/Remove.png</file>        
+        <file>images/Pause.png</file>
+        <file>images/Remove.png</file>
         <file>images/Start.png</file>
     </qresource>
 </RCC>

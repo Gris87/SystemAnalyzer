@@ -2,6 +2,7 @@
 #include "ui_editrulesdialog.h"
 
 #include <QMessageBox>
+#include <QDebug>
 
 
 
@@ -24,6 +25,8 @@ EditRulesDialog::EditRulesDialog(Rules *rules, bool withApplyButton, QWidget *pa
     ui->applyButton->setVisible(withApplyButton);
 
     setupUiFromRules();
+
+    qDebug() << "Rules editor displayed";
 }
 
 EditRulesDialog::~EditRulesDialog()
@@ -83,6 +86,7 @@ bool EditRulesDialog::apply()
         if (QMessageBox::question(this, tr("Terminate"), tr("Rules are running now. You have to terminate it. Do you want to continue?"), QMessageBox::Yes | QMessageBox::Default, QMessageBox::No | QMessageBox::Escape) == QMessageBox::Yes)
         {
             mRules->stop();
+            mRules->waitForFinished();
         }
         else
         {
@@ -132,6 +136,10 @@ bool EditRulesDialog::apply()
     mRules->setCheckSystemFiles(ui->checkSystemFilesCheckBox->isChecked());
 
     // TODO: Verification of paths
+
+    mRules->save();
+
+    qDebug() << "Rules changes applied";
 
     return true;
 }
@@ -214,6 +222,8 @@ void EditRulesDialog::on_okButton_clicked()
     }
 
     accept();
+
+    qDebug() << "Rules editor closed";
 }
 
 void EditRulesDialog::on_applyButton_clicked()
@@ -234,4 +244,6 @@ void EditRulesDialog::on_cancelButton_clicked()
     {
         reject();
     }
+
+    qDebug() << "Rules editor closed";
 }

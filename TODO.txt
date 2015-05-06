@@ -1,4 +1,2 @@
-Selection of task => change start/stop image
-Change to start when stopped
-Change to stop when started
 Check specified folder
+Add SystemAnalyzer to autorun

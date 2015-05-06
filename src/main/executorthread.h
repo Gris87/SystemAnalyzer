@@ -19,16 +19,37 @@ public:
 
     void stop();
 
+    bool isError();
+
 protected:
     void run();
 
 private:
+    void updateProgress(quint8 progress);
+
+    void checkAutorun();
+#ifdef Q_OS_WIN
+    void checkAutorun_VerifyRegistry(const QString &regKey);
+    void checkAutorun_HKCU_Run();
+    void checkAutorun_HKCU_RunOnce();
+    void checkAutorun_HKLM_Run();
+    void checkAutorun_HKLM_RunOnce();
+    void checkAutorun_StartUp();
+#endif
+
+    void checkSystemFiles();
+
     bool   mTerminated;
 
     Rules *mRules;
 
+    quint8 mStepsCount;
+    quint8 mBaseProgress;
+    quint8 mProgress;
+    bool   mError;
+
 signals:
-    void progressChanged(int progress);
+    void progressChanged(quint8 progress);
 };
 
 #endif // EXECUTORTHREAD_H
