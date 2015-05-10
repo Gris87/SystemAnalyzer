@@ -44,8 +44,8 @@ void Rules::start()
 
     mExecutorThread->start(QThread::LowestPriority);
 
-    qDebug() << "Executor started";    
-    emit started();    
+    qDebug() << "Executor started";
+    emit started();
 
     mTimeOfNextStart = calculateTimeOfNextStart();
 
@@ -560,13 +560,13 @@ void Rules::progressChanged(quint8 progress)
 
 void Rules::executorThreadFinished()
 {
-    qDebug() << "Executor finished";
-    emit finished();    
-
     mProgressBar->setValue(0);
 
+    qDebug() << "Executor finished";
+    emit finished(mExecutorThread->isReportCreated());
+
     delete mExecutorThread;
-    mExecutorThread = 0;    
+    mExecutorThread = 0;
 
     if (mNeedRestart)
     {

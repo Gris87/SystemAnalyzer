@@ -132,7 +132,7 @@ public:
 
 signals:
     void started();
-    void finished();
+    void finished(bool isReportCreated);
 
 private slots:
     void timeout();

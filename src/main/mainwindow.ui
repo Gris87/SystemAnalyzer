@@ -97,6 +97,8 @@
    <addaction name="actionRemove"/>
    <addaction name="separator"/>
    <addaction name="actionStart"/>
+   <addaction name="separator"/>
+   <addaction name="actionReports"/>
   </widget>
   <action name="actionExit">
    <property name="text">
@@ -169,6 +171,21 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionReports">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../Resources.qrc">
+     <normaloff>:/images/Reports.png</normaloff>:/images/Reports.png</iconset>
+   </property>
+   <property name="text">
+    <string>Reports</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+B</string>
    </property>
   </action>
  </widget>

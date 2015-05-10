@@ -51,7 +51,7 @@ public slots:
 
 private slots:
     void rulesStarted();
-    void rulesFinished();
+    void rulesFinished(bool isReportCreated);
 
     void on_actionExit_triggered();
     void on_actionAbout_triggered();
@@ -59,6 +59,7 @@ private slots:
     void on_actionEdit_triggered();
     void on_actionRemove_triggered();
     void on_actionStart_triggered();
+    void on_actionReports_triggered();
     void on_rulesTableWidget_itemSelectionChanged();
     void on_rulesTableWidget_cellDoubleClicked(int row, int column);
 };

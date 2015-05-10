@@ -1,2 +1,1 @@
 Check specified folder
-Add SystemAnalyzer to autorun

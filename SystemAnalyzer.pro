@@ -37,11 +37,26 @@ CONFIG += \
 RC_FILE    = Resources.rc
 RESOURCES += Resources.qrc
 
+CONFIG (debug, debug|release) {
+    DESTDIR = debug/
+    OBJECTS_DIR = debug/gen
+    MOC_DIR = debug/gen
+    RCC_DIR = debug/gen
+} else {
+    DESTDIR = release/
+    OBJECTS_DIR = release/gen
+    MOC_DIR = release/gen
+    RCC_DIR = release/gen
+}
+
+
+
 SOURCES += \
             src/main/aboutdialog.cpp \
             src/main/editrulesdialog.cpp \
             src/main/executorthread.cpp \
             src/main/mainwindow.cpp \
+            src/main/reportdialog.cpp \
             src/main/rules.cpp \
             src/main/trayicon.cpp \
             src/main.cpp
@@ -51,13 +66,15 @@ HEADERS  += \
             src/main/editrulesdialog.h \
             src/main/executorthread.h \
             src/main/mainwindow.h \
+            src/main/reportdialog.h \
             src/main/rules.h \
             src/main/trayicon.h
 
 FORMS    += \
             src/main/aboutdialog.ui \
             src/main/editrulesdialog.ui \
-            src/main/mainwindow.ui
+            src/main/mainwindow.ui \
+            src/main/reportdialog.ui
 
 DISTFILES += \
-    TODO.txt
+            TODO.txt

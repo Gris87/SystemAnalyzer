@@ -11,6 +11,7 @@
 
 #include "aboutdialog.h"
 #include "editrulesdialog.h"
+#include "reportdialog.h"
 #include "trayicon.h"
 
 
@@ -111,7 +112,7 @@ void MainWindow::closeWindow()
 {
     mAllowClose = true;
 
-    close();    
+    close();
 }
 
 void MainWindow::updateRulesRow(int row)
@@ -132,8 +133,8 @@ void MainWindow::addRulesRow()
 
     rules->setProgressBar(progressBar);
 
-    connect(rules, SIGNAL(started()),  this, SLOT(rulesStarted()));
-    connect(rules, SIGNAL(finished()), this, SLOT(rulesFinished()));
+    connect(rules, SIGNAL(started()),      this, SLOT(rulesStarted()));
+    connect(rules, SIGNAL(finished(bool)), this, SLOT(rulesFinished(bool)));
 
     ui->rulesTableWidget->setRowCount(lastRow + 1);
     ui->rulesTableWidget->setItem(      lastRow, RULES_TABLE_COLUMN_SCHEDULE, new QTableWidgetItem());
@@ -230,7 +231,7 @@ void MainWindow::rulesStarted()
     }
 }
 
-void MainWindow::rulesFinished()
+void MainWindow::rulesFinished(bool isReportCreated)
 {
     qDebug() << "On rules finished";
 
@@ -275,6 +276,17 @@ void MainWindow::rulesFinished()
         {
             ui->actionStart->setIcon(mStartIcon);
         }
+    }
+
+    if (isReportCreated)
+    {
+        if (!isVisible())
+        {
+            trayIconShowClicked();
+        }
+
+        ReportDialog dialog(reinterpret_cast<Rules *>(sender()), this);
+        dialog.exec();
     }
 }
 
@@ -462,6 +474,12 @@ void MainWindow::on_actionStart_triggered()
     }
 }
 
+void MainWindow::on_actionReports_triggered()
+{
+    ReportDialog dialog(mRulesList.at(ui->rulesTableWidget->currentRow()), this);
+    dialog.exec();
+}
+
 void MainWindow::on_rulesTableWidget_itemSelectionChanged()
 {
     qDebug() << "Rules selection changed";
@@ -506,17 +524,19 @@ void MainWindow::on_rulesTableWidget_itemSelectionChanged()
             ui->actionStart->setIcon(mStartIcon);
         }
 
-        ui->actionEdit->setEnabled(  true);
-        ui->actionRemove->setEnabled(true);
-        ui->actionStart->setEnabled( true);
+        ui->actionEdit->setEnabled(   true);
+        ui->actionRemove->setEnabled( true);
+        ui->actionStart->setEnabled(  true);
+        ui->actionReports->setEnabled(true);
     }
     else
     {
         ui->actionStart->setIcon(mStartIcon);
 
-        ui->actionEdit->setEnabled(  false);
-        ui->actionRemove->setEnabled(false);
-        ui->actionStart->setEnabled( false);
+        ui->actionEdit->setEnabled(   false);
+        ui->actionRemove->setEnabled( false);
+        ui->actionStart->setEnabled(  false);
+        ui->actionReports->setEnabled(false);
     }
 }
 
@@ -524,21 +544,21 @@ void MainWindow::on_rulesTableWidget_cellDoubleClicked(int /*row*/, int /*column
 {
     qDebug() << "Rules double clicked";
 
-    on_actionEdit_triggered();
+    on_actionReports_triggered();
 }
 
 void MainWindow::saveWindowState()
 {
     QSettings settings("GrisCom", "SystemAnalyzer");
-    settings.setValue("geometry",    saveGeometry());
-    settings.setValue("windowState", saveState());
+    settings.setValue("MainWindow/geometry",    saveGeometry());
+    settings.setValue("MainWindow/windowState", saveState());
 }
 
 void MainWindow::loadWindowState()
 {
     QSettings settings("GrisCom", "SystemAnalyzer");
-    restoreGeometry(settings.value("geometry").toByteArray());
-    restoreState(settings.value("windowState").toByteArray());
+    restoreGeometry(settings.value("MainWindow/geometry").toByteArray());
+    restoreState(settings.value("MainWindow/windowState").toByteArray());
 }
 
 void MainWindow::loadRules()
