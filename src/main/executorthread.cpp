@@ -276,12 +276,17 @@ void ExecutorThread::checkAutorun_VerifyRegistry(const QString &regKey, const QS
     for (int i = 0; i < keys.length() && !mTerminated; ++i)
     {
         const QString &key = keys.at(i);
-        QString value = settings.value(key).toString();
 
-        res.append(key);
-        res.append(" = ");
-        res.append(value);
-        res.append("\n");
+        // Ignore this key since it always changes on reboot
+        if (key != "Adobe Speed Launcher")
+        {
+            QString value = settings.value(key).toString();
+
+            res.append(key);
+            res.append(" = ");
+            res.append(value);
+            res.append("\n");
+        }
     }
 
     if (mTerminated)
