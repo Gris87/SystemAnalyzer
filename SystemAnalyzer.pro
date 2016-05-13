@@ -51,7 +51,7 @@ CONFIG (debug, debug|release) {
 
 
 
-SOURCES += \
+SOURCES  += \
             src/main/aboutdialog.cpp \
             src/main/editrulesdialog.cpp \
             src/main/executorthread.cpp \
