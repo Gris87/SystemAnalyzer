@@ -202,6 +202,29 @@ void ReportDialog::on_reportsTreeWidget_itemDoubleClicked(QTreeWidgetItem *item,
                 }
             }
 
+            if (mergeApp == "")
+            {
+                if (QFile::exists("C:/Program Files/Araxis/Araxis Merge/Merge.exe"))
+                {
+                    mergeApp = "C:/Program Files/Araxis/Araxis Merge/Merge.exe";
+                }
+                else
+                if (QFile::exists("C:/Program Files (x86)/Araxis/Araxis Merge/Merge.exe"))
+                {
+                    mergeApp = "C:/Program Files (x86)/Araxis/Araxis Merge/Merge.exe";
+                }
+                else
+                if (QFile::exists("C:/Program Files/WinMerge/WinMergeU.exe"))
+                {
+                    mergeApp = "C:/Program Files/WinMerge/WinMergeU.exe";
+                }
+                else
+                if (QFile::exists("C:/Program Files (x86)/WinMerge/WinMergeU.exe"))
+                {
+                    mergeApp = "C:/Program Files (x86)/WinMerge/WinMergeU.exe";
+                }
+            }
+
             mergeApp = QDir::fromNativeSeparators(mergeApp).replace("//", "/");
         }
 #endif
